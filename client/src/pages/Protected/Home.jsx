@@ -1,5 +1,5 @@
 import { Stack } from "@mui/material";
-import Input from "../../components/Home/input";
+import Input from "../../components/home/Input";
 import Post from "../../components/home/Post";
 
 
