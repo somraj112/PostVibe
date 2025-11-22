@@ -1,6 +1,7 @@
-import React from "react";
 import { Stack, Typography, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 const Error = () => {
+  const navigate = useNavigate();
   return (
     <>
       <Stack
@@ -10,19 +11,39 @@ const Error = () => {
         justifyContent={"center"}
         alignItems={"center"}
         sx={{
-            background: 'url("/error-bg.png")',
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "cover",
-
+          background: 'url("/error-bg.png")',
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover",
         }}
       >
-        <Stack padding={5} border={'2px solid black'} bgcolor={'wheat'} borderRadius={'10px'} flexDirection={'column'} alignItems={'center'} gap={2} boxShadow={'7px 7px 7px white'} >
+        <Stack
+          p={5}
+          border={"2px solid black"}
+          bgcolor={"wheat"}
+          borderRadius={"10px"}
+          flexDirection={"column"}
+          alignItems={"center"}
+          gap={2}
+          boxShadow={"7px 7px 7px white"}
+        >
           <Typography variant="h3"> OPPS !</Typography>
           <Typography variant="h6"> You have entered wrong page !</Typography>
-          <Button size={'large'} sx={{bgcolor:'blue',color:'white',borderRadius:'10px', p:2, ':hover':{
-            bgcolor:'green',
-            cursor:'pointer'
-          }}}>Go Back</Button>
+          <Button
+            size="large"
+            sx={{
+              bgcolor: "blue",
+              color: "white",
+              borderRadius: "10px",
+              p: 2,
+              ":hover": {
+                bgcolor: "green",
+                cursor: "pointer",
+              },
+            }}
+            onClick={() => navigate(-1)}
+          >
+            Go Back
+          </Button>
         </Stack>
       </Stack>
     </>
