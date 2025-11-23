@@ -11,21 +11,21 @@ import Error from "./pages/Error";
 import Register from "./pages/Register";
 import { Box } from "@mui/material";
 import ProtectedLayout from "./pages/Protected/ProtectedLayout";
-import { useMyInfoQuery } from "./redux/service";
+// import { useMyInfoQuery } from "./redux/service";
 
 const App = () => {
   const { darkMode } = useSelector((state) => state.service);
-  const { data, isError } = useMyInfoQuery();
+  // const { data, isError } = useMyInfoQuery();
 
-  if (isError || !data) {
-    return (
-      <BrowserRouter>
-        <Routes>
-          <Route path="/*" element={<Register />} />
-        </Routes>
-      </BrowserRouter>
-    );
-  }
+  // if (isError || !data) {
+  //   return (
+  //     <BrowserRouter>
+  //       <Routes>
+  //         <Route path="/*" element={<Register />} />
+  //       </Routes>
+  //     </BrowserRouter>
+  //   );
+  // }
   return (
     <>
       <Box minHeight={"100vh"} className={darkMode ? "mode" : ""}>
