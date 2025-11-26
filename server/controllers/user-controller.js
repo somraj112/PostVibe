@@ -171,7 +171,7 @@ exports.updateProfile = async (req, res) => {
         }
         const uploadedImage = await cloudinary.uploader.upload(
           files.media.filepath,
-          { folder: "Threads_clone_youtube/Profiles" }
+          { folder: "PostVibe/Profiles" }
         );
         if (!uploadedImage) {
           return res.status(400).json({ msg: "Error while uploading pic !" });
