@@ -1,5 +1,11 @@
-import { Button, Stack, TextField, Typography,useMediaQuery, } from "@mui/material";
-import { useEffect,useState } from "react";
+import {
+  Button,
+  Stack,
+  TextField,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
+import { useEffect, useState } from "react";
 import { useLoginMutation, useSigninMutation } from "../redux/service";
 import { Bounce, toast } from "react-toastify";
 import Loading from "../components/common/Loading";
@@ -101,36 +107,41 @@ const Register = () => {
       <Stack
         width={"100%"}
         height={"100vh"}
-        flexDirection={"column"}
+        flexDirection={"row"}
         alignItems={"center"}
         justifyContent={"center"}
         sx={
           _700
-          ? {
-          backgroundImage: 'url("/register-bg.webp")',
-          backgroundRepeat: "no-repeat",
-          backgroundSize: "100% 600px",
+            ? {
+                backgroundImage: 'url("/register-bg.webp")',
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "100% 600px",
+              }
+            : null
         }
-      : null 
-    }
       >
-        <Stack flexDirection={"column"} width={_700 ? "40%" : "90%"} gap={2} mt={_700 ? 20 : 0}>
-          
+        <Stack
+          flexDirection={"column"}
+          width={_700 ? "40%" : "90%"}
+          gap={2}
+          mt={_700 ? 20 : 0}
+        >
           <Typography
-          variant="h5"
-          fontSize={_700 ? '1.5rem' : "1rem"}
-          fontWeight={'bold'}
-          alignSelf={'center'}>
-            {login ? 'Login with Email' : 'Register with Email'}
+            variant="h5"
+            fontSize={_700 ? "1.5rem" : "1rem"}
+            fontWeight={"bold"}
+            alignSelf={"center"}
+          >
+            {login ? "Login with Email" : "Register with Email"}
           </Typography>
           {login ? null : (
             <TextField
-            variant="outlined"
-            placeholder="Enter your username..."
-            onChange={(e) => setUserName(e.target.value)}
-          />
+              variant="outlined"
+              placeholder="Enter your username..."
+              onChange={(e) => setUserName(e.target.value)}
+            />
           )}
-          
+
           <TextField
             variant="outlined"
             placeholder="Enter your email..."
@@ -141,19 +152,20 @@ const Register = () => {
             placeholder="Enter your password..."
             onChange={(e) => setPassword(e.target.value)}
           />
-          <Button size="large"
-          sx={{
-            width: '100%',
-            height:52,
-            bgcolor: 'green',
-            fontSize: '1rem',
-            color: 'white',
-            ':hover': {
-              backgroundColor: 'blue',
-              cursor: 'pointer',
-            },
-          }}
-          onClick={login ? handleLogin : handleRegister}
+          <Button
+            size="large"
+            sx={{
+              width: "100%",
+              height: 52,
+              bgcolor: "green",
+              fontSize: "1rem",
+              color: "white",
+              ":hover": {
+                backgroundColor: "blue",
+                cursor: "pointer",
+              },
+            }}
+            onClick={login ? handleLogin : handleRegister}
           >
             {login ? "Login" : "  Sign Up"}
           </Button>

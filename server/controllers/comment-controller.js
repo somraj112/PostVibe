@@ -81,7 +81,7 @@ exports.deleteComment = async (req, res) => {
         { new: true }
       );
       await Comment.findByIdAndDelete(id);
-      return res.status(201).json({ msg: "Comment deleted !" });
+      return res.status(200).json({ msg: "Comment deleted !" });
     }
     res.status(201).json({ msg: "This post does not include the comment !" });
   } catch (err) {

@@ -1,6 +1,6 @@
 import { Stack, Typography } from "@mui/material";
 import ProfileBar from "../../components/search/ProfileBar";
-import SearchInput from '../../components/search/SearchInput'
+import SearchInput from "../../components/search/SearchInput";
 import { useSelector } from "react-redux";
 const Search = () => {
   const { searchedUsers } = useSelector((state) => state.service);
@@ -23,7 +23,7 @@ const Search = () => {
         )}
       </Stack>
     </>
-  )
-}
+  );
+};
 
-export default Search
+export default Search;

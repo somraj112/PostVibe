@@ -13,6 +13,7 @@ const MainMenu = () => {
 
   const dispatch = useDispatch();
 
+
   const handleClose = () => {
     dispatch(toggleMainMenu(null));
   };
