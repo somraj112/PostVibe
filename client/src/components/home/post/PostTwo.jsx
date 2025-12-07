@@ -128,7 +128,10 @@ const PostTwo = ({ e }) => {
             )}
 
             <Link to={`/post/${e?._id}#comment`} className="link">
-              <FaRegComment size={_700 ? 32 : _300 ? 28 : 24} />
+              <FaRegComment
+                size={_700 ? 32 : _300 ? 28 : 24}
+                color={darkMode ? "white" : "black"}
+              />
             </Link>
             <FaRetweet
               size={_700 ? 32 : _300 ? 28 : 24}
