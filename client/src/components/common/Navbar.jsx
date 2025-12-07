@@ -1,11 +1,11 @@
 import { GoHomeFill } from "react-icons/go";
-import { Stack,useMediaQuery } from "@mui/material";
+import { Stack, useMediaQuery, IconButton } from "@mui/material";
 import { IoIosSearch } from "react-icons/io";
 import { TbEdit } from "react-icons/tb";
 import { CiHeart } from "react-icons/ci";
 import { RxAvatar } from "react-icons/rx";
 import { FiArrowLeft } from "react-icons/fi";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { addPostModal } from "../../redux/slice";
 import { useEffect, useState } from "react";
@@ -17,6 +17,7 @@ const Navbar = () => {
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [showArrow, setShowArrow] = useState(false);
 
@@ -49,39 +50,66 @@ const Navbar = () => {
         alignItems={"center"}
       >
         {showArrow ? (
-          <FiArrowLeft
-            size={_300 ? 32 : 24}
-            className="image-icon"
-            onClick={handleNavigate}
-            color={darkMode ? "white" : "black"}
-          />
+          <IconButton onClick={handleNavigate}>
+            <FiArrowLeft
+              size={_300 ? 28 : 24}
+              color={darkMode ? "white" : "black"}
+            />
+          </IconButton>
         ) : null}
-        <Link to={"/"} className="link">
-          <GoHomeFill
-            size={_300 ? 32 : 24}
-            color={darkMode ? "white" : "black"}
-          />
-        </Link>
-        <Link to={"/search"} className="link">
-          <IoIosSearch
-            size={_300 ? 32 : 24}
-            color={darkMode ? "white" : "black"}
-          />
-        </Link>
 
-        <TbEdit
-          size={_300 ? 32 : 24}
-          className="image-icon"
-          color={darkMode ? "white" : "black"}
-          onClick={handleAddPost}
-        />
-        <CiHeart size={_300 ? 32 : 24} color={darkMode ? "white" : "black"} />
-        <Link to={`/profile/threads/${myInfo?._id}`} className="link">
-          <RxAvatar
-            size={_300 ? 32 : 24}
-            color={darkMode ? "white" : "black"}
+        <IconButton component={Link} to={"/"}>
+          <GoHomeFill
+            size={_300 ? 32 : 28}
+            color={
+              location.pathname === "/"
+                ? darkMode
+                  ? "white"
+                  : "black"
+                : "gray"
+            }
           />
-        </Link>
+        </IconButton>
+
+        <IconButton component={Link} to={"/search"}>
+          <IoIosSearch
+            size={_300 ? 32 : 28}
+            color={
+              location.pathname === "/search"
+                ? darkMode
+                  ? "white"
+                  : "black"
+                : "gray"
+            }
+          />
+        </IconButton>
+
+        <IconButton onClick={handleAddPost}>
+          <TbEdit
+            size={_300 ? 32 : 28}
+            color={"gray"}
+          />
+        </IconButton>
+
+        <IconButton>
+          <CiHeart
+            size={_300 ? 32 : 28}
+            color={"gray"}
+          />
+        </IconButton>
+
+        <IconButton component={Link} to={`/profile/threads/${myInfo?._id}`}>
+          <RxAvatar
+            size={_300 ? 32 : 28}
+            color={
+              location.pathname.includes("/profile")
+                ? darkMode
+                  ? "white"
+                  : "black"
+                : "gray"
+            }
+          />
+        </IconButton>
       </Stack>
     </>
   );

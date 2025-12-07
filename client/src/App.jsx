@@ -14,12 +14,18 @@ import SinglePost from "./pages/Protected/SinglePost";
 import { useMyInfoQuery } from "./redux/service";
 
 const App = () => {
-  const { darkMode } = useSelector((state) => state.service);
-  const { data, isError } = useMyInfoQuery();
+  const { darkMode, myInfo } = useSelector((state) => state.service);
+  const { isLoading, isError } = useMyInfoQuery();
 
-  if (isError || !data) {
+  if (isLoading) {
+    return <></>;
+  }
+
+  if (isError || !myInfo) {
     return (
-      <BrowserRouter>
+      <BrowserRouter
+        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+      >
         <Routes>
           <Route exact path="/*" element={<Register />} />
         </Routes>
@@ -30,7 +36,9 @@ const App = () => {
   return (
     <>
       <Box minHeight={"100vh"} className={darkMode ? "mode" : ""}>
-        <BrowserRouter>
+        <BrowserRouter
+          future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+        >
           <Routes>
             <Route exact path="/" element={<ProtectedLayout />}>
               <Route exact path="" element={<Home />} />

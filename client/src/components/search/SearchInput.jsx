@@ -1,4 +1,4 @@
-import { InputAdornment, TextField } from "@mui/material";
+import { IconButton, InputAdornment, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
@@ -17,37 +17,74 @@ const SearchInput = () => {
 
   const handleSearch = async (e) => {
     if (query && e.key === "Enter") {
-      await searchUser(query);
+      try {
+        const result = await searchUser(query);
+        if (result.data) {
+          dispatch(addToSearchedUsers(result.data.users));
+          toast.success(result.data.msg, {
+            position: "top-center",
+            autoClose: 2500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "colored",
+            transition: Bounce,
+          });
+        }
+        if (result.error) {
+          toast.error(result.error.data.msg, {
+            position: "top-center",
+            autoClose: 2500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "colored",
+            transition: Bounce,
+          });
+        }
+      } catch (err) {
+        console.error(err);
+      }
     }
   };
 
-  useEffect(() => {
-    if (searchUserData.isSuccess) {
-      dispatch(addToSearchedUsers(searchUserData.data.users));
-      toast.success(searchUserData.data.msg, {
-        position: "top-center",
-        autoClose: 2500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "colored",
-        transition: Bounce,
-      });
+  const handleSearchButton = async () => {
+    if (query) {
+      try {
+        const result = await searchUser(query);
+        if (result.data) {
+          dispatch(addToSearchedUsers(result.data.users));
+          toast.success(result.data.msg, {
+            position: "top-center",
+            autoClose: 2500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "colored",
+            transition: Bounce,
+          });
+        }
+        if (result.error) {
+          toast.error(result.error.data.msg, {
+            position: "top-center",
+            autoClose: 2500,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            theme: "colored",
+            transition: Bounce,
+          });
+        }
+      } catch (err) {
+        console.error(err);
+      }
     }
-    if (searchUserData.isError) {
-      toast.success(searchUserData.error.data.msg, {
-        position: "top-center",
-        autoClose: 2500,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "colored",
-        transition: Bounce,
-      });
-    }
-  }, [searchUserData.isSuccess, searchUserData.isError]);
+  };
+
 
   return (
     <>
@@ -70,12 +107,17 @@ const SearchInput = () => {
         }}
         placeholder="search user..."
         InputProps={{
-          startAdornment: (
+          endAdornment: (
             <InputAdornment
-              position="start"
+              position="end"
               sx={{ color: darkMode ? "whitesmoke" : "black" }}
             >
-              <FaSearch />
+              <IconButton onClick={handleSearchButton} edge="end">
+                <FaSearch
+                  size={20}
+                  color={darkMode ? "whitesmoke" : "black"}
+                />
+              </IconButton>
             </InputAdornment>
           ),
         }}

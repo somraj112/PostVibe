@@ -2,7 +2,8 @@ import { Grid, Stack, useMediaQuery } from "@mui/material";
 import Navbar from "./Navbar";
 import { IoMenu } from "react-icons/io5";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleMainMenu } from "../../redux/slice";
+import { toggleMainMenu, toggleColorMode } from "../../redux/slice";
+import { IoSunny, IoMoon } from "react-icons/io5";
 const Header = () => {
   const { darkMode } = useSelector((state) => state.service);
   const _700 = useMediaQuery("(min-width:700px)");
@@ -11,6 +12,9 @@ const Header = () => {
 
   const handleOpenMenu = (e) => {
     dispatch(toggleMainMenu(e.currentTarget));
+  };
+  const handleToggleTheme = () => {
+    dispatch(toggleColorMode());
   };
   return (
     <>
@@ -48,12 +52,27 @@ const Header = () => {
           >
             <Navbar />
           </Stack>
-          <IoMenu
-            size={36}
-            className="image-icon"
-            color="gray"
-            onClick={handleOpenMenu}
-          />
+          <Stack flexDirection={"row"} gap={2} alignItems={"center"}>
+            {darkMode ? (
+              <IoSunny
+                size={30}
+                className="image-icon"
+                onClick={handleToggleTheme}
+              />
+            ) : (
+              <IoMoon
+                size={30}
+                className="image-icon"
+                onClick={handleToggleTheme}
+              />
+            )}
+            <IoMenu
+              size={36}
+              className="image-icon"
+              color="gray"
+              onClick={handleOpenMenu}
+            />
+          </Stack>
         </Stack>
       ) : (
         <>
@@ -84,7 +103,22 @@ const Header = () => {
                 height={50}
               />
             </Grid>
-            <IoMenu size={36} className="image-icon" color="gray" />
+            <Grid item xs={6} display={"flex"} justifyContent={"flex-end"} gap={2} alignItems={"center"}>
+              {darkMode ? (
+                <IoSunny
+                  size={30}
+                  className="image-icon"
+                  onClick={handleToggleTheme}
+                />
+              ) : (
+                <IoMoon
+                  size={30}
+                  className="image-icon"
+                  onClick={handleToggleTheme}
+                />
+              )}
+              <IoMenu size={36} className="image-icon" color="gray" onClick={handleOpenMenu} />
+            </Grid>
           </Grid>
         </>
       )}

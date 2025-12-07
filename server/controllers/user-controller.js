@@ -213,7 +213,8 @@ exports.searchUser = async (req, res) => {
 exports.logout = async (req, res) => {
   try {
     res.cookie("token", "", {
-      maxAge: 0,
+      path: "/",
+      expires: new Date(0),
       httpOnly: true,
       sameSite: "none",
       secure: true,

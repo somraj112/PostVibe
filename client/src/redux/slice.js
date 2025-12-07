@@ -9,7 +9,7 @@ export const serviceSlice = createSlice({
     openEditCommentModal: false,
     anchorE1: null,
     anchorE2: null,
-    darkMode: false,
+    darkMode: localStorage.getItem("darkMode") === "true",
     myInfo: null,
     user: {},
     allPosts: [],
@@ -39,6 +39,7 @@ export const serviceSlice = createSlice({
     },
     toggleColorMode: (state) => {
       state.darkMode = !state.darkMode;
+      localStorage.setItem("darkMode", state.darkMode);
     },
     addMyInfo: (state, action) => {
       state.myInfo = action.payload.me;
