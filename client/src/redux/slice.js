@@ -4,7 +4,9 @@ export const serviceSlice = createSlice({
   name: "service",
   initialState: {
     openAddPostModal: false,
+    openEditPostModal: false,
     openEditProfileModal: false,
+    openEditCommentModal: false,
     anchorE1: null,
     anchorE2: null,
     darkMode: false,
@@ -12,6 +14,8 @@ export const serviceSlice = createSlice({
     user: {},
     allPosts: [],
     postId: null,
+    commentId: null,
+    commentText: null,
     searchedUsers: [],
   },
   reducers: {
@@ -20,6 +24,12 @@ export const serviceSlice = createSlice({
     },
     editProfileModal: (state, action) => {
       state.openEditProfileModal = action.payload;
+    },
+    editPostModal: (state, action) => {
+      state.openEditPostModal = action.payload;
+    },
+    editCommentModal: (state, action) => {
+      state.openEditCommentModal = action.payload;
     },
     toggleMainMenu: (state, action) => {
       state.anchorE1 = action.payload;
@@ -77,9 +87,21 @@ export const serviceSlice = createSlice({
     addPostId:(state,action)=>{
       state.postId = action.payload;
     },
+    addCommentId: (state, action) => {
+      state.commentId = action.payload;
+    },
+    addCommentText: (state, action) => {
+      state.commentText = action.payload;
+    },
 
     addToSearchedUsers: (state, action) => {
       state.searchedUsers = action.payload;
+    },
+    logout: (state) => {
+      state.user = {};
+      state.myInfo = null;
+      state.allPosts = [];
+      state.searchedUsers = [];
     },
   },
 });
@@ -88,6 +110,8 @@ export const {
   addPostId,
   addPostModal,
   editProfileModal,
+  editPostModal,
+  editCommentModal,
   toggleMainMenu,
   toggleMyMenu,
   toggleColorMode,
@@ -97,6 +121,9 @@ export const {
   addToAllPost,
   deleteThePost,
   addToSearchedUsers,
+  addCommentId,
+  addCommentText,
+  logout,
 } = serviceSlice.actions;
 
 export default serviceSlice.reducer;

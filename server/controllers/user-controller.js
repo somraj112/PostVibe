@@ -40,11 +40,9 @@ exports.signin = async (req, res) => {
     res.cookie("token", accesToken, {
       maxAge: 1000 * 60 * 60 * 24 * 30,
       httpOnly: true,
-      // sameSite: "none",
-      // secure: true,
-      sameSite: "lax",
-      secure: false, 
-      // partitioned: true,
+      sameSite: "none",
+      secure: true,
+      partitioned: true,
     });
     res
       .status(201)
@@ -80,11 +78,9 @@ exports.login = async (req, res) => {
     res.cookie("token", accessToken, {
       maxAge: 1000 * 60 * 60 * 24 * 30,
       httpOnly: true,
-      // secure: true,
-      // sameSite: "none",
-      sameSite: "lax",
-      secure: false, 
-      // partitioned: true,
+      secure: true,
+      sameSite: "none",
+      partitioned: true,
     });
     res.status(200).json({ msg: "User logged in succcessfully !" });
   } catch (err) {
@@ -219,11 +215,9 @@ exports.logout = async (req, res) => {
     res.cookie("token", "", {
       maxAge: 0,
       httpOnly: true,
-      // sameSite: "none",
-      // secure: true,
-      sameSite: "lax",
-      secure: false, 
-      // partitioned: true,
+      sameSite: "none",
+      secure: true,
+      partitioned: true,
     });
 
     res.status(201).json({ msg: "You logged out !" });
@@ -234,8 +228,7 @@ exports.logout = async (req, res) => {
 
 exports.myInfo = async (req, res) => {
   try {
-    // res.status(200).json({ me: req.user });
-    res.status(200).json(req.user);
+    res.status(200).json({ me: req.user });
   } catch (err) {
     res.status(400).json({ msg: "Error in myInfo !" });
   }

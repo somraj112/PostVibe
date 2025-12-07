@@ -23,7 +23,7 @@ const Threads = () => {
             </Stack>
           ) : (
             <Typography variant="h6" textAlign={"center"}>
-              No Thread yet !
+              No Vibe yet !
             </Typography>
           )
         ) : (

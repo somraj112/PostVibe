@@ -23,7 +23,7 @@ const Post = ({ e }) => {
   };
 
   const checkIsAdmin = () => {
-    if (e?.admin._id === myInfo._id) {
+    if (e?.admin?._id === myInfo._id) {
       setIsAdmin(true);
       return;
     }

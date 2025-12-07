@@ -1,6 +1,6 @@
 import { Menu, MenuItem } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleMyMenu } from "../../redux/slice";
+import { toggleMyMenu, editPostModal } from "../../redux/slice";
 import { useDeletePostMutation } from "../../redux/service";
 import { useEffect } from "react";
 import { Bounce, toast } from "react-toastify";
@@ -19,6 +19,11 @@ const MyMenu = () => {
   const handleDeletePost = async () => {
     handleClose();
     await deletePost(postId);
+  };
+
+  const handleEditPost = () => {
+    handleClose();
+    dispatch(editPostModal(true));
   };
 
   useEffect(() => {
@@ -57,6 +62,7 @@ const MyMenu = () => {
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
       >
+        <MenuItem onClick={handleEditPost}>Edit</MenuItem>
         <MenuItem onClick={handleDeletePost}>Delete</MenuItem>
       </Menu>
     </>

@@ -13,51 +13,61 @@ import { RxCross2 } from "react-icons/rx";
 import { FaImages } from "react-icons/fa";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addPostModal } from "../../redux/slice";
-import { useAddPostMutation } from "../../redux/service";
+import { editPostModal } from "../../redux/slice";
+import { useEditPostMutation, useSinglePostQuery } from "../../redux/service";
 import Loading from "../common/Loading";
 import { Bounce, toast } from "react-toastify";
 
-const AddPost = () => {
-  const { openAddPostModal, myInfo } = useSelector((state) => state.service);
+const EditPost = () => {
+  const { openEditPostModal, myInfo, postId } = useSelector((state) => state.service);
+  const { data: postData } = useSinglePostQuery(postId, { skip: !postId });
 
-  const [addNewPost, addNewPostData] = useAddPostMutation();
+  const [editPost, editPostData] = useEditPostMutation();
 
   const _700 = useMediaQuery("(min-width:700px)");
   const _500 = useMediaQuery("(min-width:500px)");
   const _300 = useMediaQuery("(min-width:300px)");
 
-  const [text, setText] = useState();
-  const [media, setMedia] = useState();
+  const [text, setText] = useState("");
+  const [media, setMedia] = useState("");
+  const [existingMedia, setExistingMedia] = useState("");
 
   const mediaRef = useRef();
   const dispatch = useDispatch();
 
   const handleClose = () => {
-    dispatch(addPostModal(false));
+    dispatch(editPostModal(false));
   };
 
   const handleMediaRef = () => {
     mediaRef.current.click();
   };
 
-  const handlePost = async () => {
+  const handleEdit = async () => {
     const data = new FormData();
+    data.append("id", postId);
     if (text) {
       data.append("text", text);
     }
     if (media) {
       data.append("media", media);
     }
-    await addNewPost(data);
+    await editPost({ id: postId, data });
   };
 
   useEffect(() => {
-    if (addNewPostData.isSuccess) {
-      setText();
-      setMedia();
-      dispatch(addPostModal(false));
-      toast.success(addNewPostData.data.msg, {
+    if (postData && postData.post) {
+      setText(postData.post.text || "");
+      setExistingMedia(postData.post.media || "");
+    }
+  }, [postData]);
+
+  useEffect(() => {
+    if (editPostData.isSuccess) {
+      setText("");
+      setMedia("");
+      dispatch(editPostModal(false));
+      toast.success(editPostData.data.msg, {
         position: "top-center",
         autoClose: 2500,
         hideProgressBar: false,
@@ -68,8 +78,8 @@ const AddPost = () => {
         transition: Bounce,
       });
     }
-    if (addNewPostData.isError) {
-      toast.error(addNewPostData.error.data.msg, {
+    if (editPostData.isError) {
+      toast.error(editPostData.error.data.msg, {
         position: "top-center",
         autoClose: 2500,
         hideProgressBar: false,
@@ -80,17 +90,17 @@ const AddPost = () => {
         transition: Bounce,
       });
     }
-  }, [addNewPostData.isSuccess, addNewPostData.isError]);
+  }, [editPostData.isSuccess, editPostData.isError, dispatch]);
 
   return (
     <>
       <Dialog
-        open={openAddPostModal}
+        open={openEditPostModal}
         onClose={handleClose}
         fullWidth
         fullScreen={_700 ? false : true}
       >
-        {addNewPostData?.isLoading ? (
+        {editPostData?.isLoading ? (
           <Stack height={"60vh"}>
             <Loading />
           </Stack>
@@ -105,7 +115,7 @@ const AddPost = () => {
               <RxCross2 size={28} className="image-icon" />
             </Box>
             <DialogTitle textAlign={"center"} mb={5}>
-              New Vibe Post...
+              Edit Vibe Post...
             </DialogTitle>
             <DialogContent>
               <Stack flexDirection={"row"} gap={2} mb={5}>
@@ -127,11 +137,20 @@ const AddPost = () => {
                     className="text1"
                     placeholder="Start a Vibe Post..."
                     autoFocus
+                    value={text}
                     onChange={(e) => setText(e.target.value)}
                   />
                   {media ? (
                     <img
                       src={URL.createObjectURL(media)}
+                      alt=""
+                      id="url-img"
+                      width={_500 ? 300 : _300 ? 200 : 100}
+                      height={_500 ? 300 : _300 ? 200 : 100}
+                    />
+                  ) : existingMedia ? (
+                    <img
+                      src={existingMedia}
                       alt=""
                       id="url-img"
                       width={_500 ? 300 : _300 ? 200 : 100}
@@ -168,7 +187,7 @@ const AddPost = () => {
                     borderRadius: "10px",
                     ":hover": { bgcolor: "gray", cursor: "pointer" },
                   }}
-                  onClick={handlePost}
+                  onClick={handleEdit}
                 >
                   Post
                 </Button>
@@ -181,4 +200,4 @@ const AddPost = () => {
   );
 };
 
-export default AddPost;
+export default EditPost;

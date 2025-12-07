@@ -88,3 +88,34 @@ exports.deleteComment = async (req, res) => {
     res.status(400).json({ msg: "Error in deleteComment", err: err.message });
   }
 };
+
+exports.editComment = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { text } = req.body;
+    if (!id) {
+      return res.status(400).json({ msg: "Id is required !" });
+    }
+    if (!text) {
+      return res.status(400).json({ msg: "No text to update !" });
+    }
+
+    const commentExists = await Comment.findById(id);
+    if (!commentExists) {
+      return res.status(400).json({ msg: "Comment not found !" });
+    }
+
+    if (commentExists.admin.toString() !== req.user._id.toString()) {
+      return res
+        .status(400)
+        .json({ msg: "You are not authorized to edit this comment !" });
+    }
+
+    commentExists.text = text;
+    await commentExists.save();
+
+    res.status(200).json({ msg: "Comment updated !" });
+  } catch (err) {
+    res.status(400).json({ msg: "Error in editComment !", err: err.message });
+  }
+};

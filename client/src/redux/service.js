@@ -182,6 +182,22 @@ export const serviceApi = createApi({
         { type: "Post", id: postId },
       ],
     }),
+    editPost: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `post/${id}`,
+        method: "PUT",
+        body: data,
+      }),
+      invalidatesTags: (result, error, { id }) => [{ type: "Post", id }],
+    }),
+    editComment: builder.mutation({
+      query: ({ id, text }) => ({
+        url: `comment/${id}`,
+        method: "PUT",
+        body: { text },
+      }),
+      invalidatesTags: ["User", "Post"],
+    }),
   }),
 });
 
@@ -202,4 +218,6 @@ export const {
   useRepostMutation,
   useSinglePostQuery,
   useUpdateProfileMutation,
+  useEditPostMutation,
+  useEditCommentMutation,
 } = serviceApi;

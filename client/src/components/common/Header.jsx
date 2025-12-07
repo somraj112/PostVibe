@@ -26,17 +26,17 @@ const Header = () => {
         >
           {darkMode ? (
             <img
-              src="/Threads-logo-black-bg.webp"
+              src="/PostVibeBlack.png"
               alt="logo"
-              width={60}
+              width={90}
               height={50}
             />
           ) : (
             <img
-              src="/Threads-logo-white-bg.png"
+              src="/PostVibeWhite.png"
               alt="logo"
-              width={60}
-              height={35}
+              width={90}
+              height={50}
             />
           )}
           <Stack
@@ -78,10 +78,10 @@ const Header = () => {
           >
             <Grid item xs={6}>
               <img
-                src="/Threads-logo-white-bg.png"
+                src="/PostVibeWhite.png"
                 alt="logo"
-                width={60}
-                height={35}
+                width={90}
+                height={50}
               />
             </Grid>
             <IoMenu size={36} className="image-icon" color="gray" />

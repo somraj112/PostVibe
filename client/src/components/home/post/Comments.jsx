@@ -15,6 +15,12 @@ import {
 } from "../../../redux/service";
 import { Bounce, toast } from "react-toastify";
 import { FaBedPulse } from "react-icons/fa6";
+import { useDispatch } from "react-redux";
+import {
+  addCommentId,
+  addCommentText,
+  editCommentModal,
+} from "../../../redux/slice";
 
 const Comments = ({ e, postId }) => {
   const { darkMode, myInfo } = useSelector((state) => state.service);
@@ -23,6 +29,8 @@ const Comments = ({ e, postId }) => {
   const [isAdmin, setIsAdmin] = useState();
 
   const _700 = useMediaQuery("(min-width:700px)");
+
+  const dispatch = useDispatch();
 
   const [deleteComment, deleteCommentData] = useDeleteCommentMutation();
   const { refetch } = useSinglePostQuery(postId);
@@ -41,8 +49,15 @@ const Comments = ({ e, postId }) => {
     refetch();
   };
 
+  const handleEditComment = () => {
+    handleClose();
+    dispatch(addCommentId(e._id));
+    dispatch(addCommentText(e.text));
+    dispatch(editCommentModal(true));
+  };
+
   const checkIsAdmin = () => {
-    if (e && myInfo) {
+    if (e && myInfo && e.admin) {
       if (e.admin._id === myInfo._id) {
         setIsAdmin(true);
         return;
@@ -95,12 +110,12 @@ const Comments = ({ e, postId }) => {
       >
         <Stack flexDirection={"row"} gap={_700 ? 2 : 1}>
           <Avatar
-            src={e ? e.admin.profilePic : ""}
-            alt={e ? e.admin.userName : ""}
+            src={e?.admin ? e.admin.profilePic : ""}
+            alt={e?.admin ? e.admin.userName : ""}
           />
           <Stack flexDirection={"column"}>
             <Typography variant="h6" fontWeight={"bold"} fontSize={"0.9rem"}>
-              {e ? e.admin.userName : ""}
+              {e?.admin ? e.admin.userName : "Deleted User"}
             </Typography>
             <Typography variant="subtitle2" fontSize={"0.9rem"}>
               {e ? e.text : ""}
@@ -133,6 +148,7 @@ const Comments = ({ e, postId }) => {
         anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
         transformOrigin={{ vertical: "top", horizontal: "right" }}
       >
+        <MenuItem onClick={handleEditComment}>Edit</MenuItem>
         <MenuItem onClick={handleDeleteComment}>Delete</MenuItem>
       </Menu>
     </>

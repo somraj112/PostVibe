@@ -1,5 +1,11 @@
 import React from "react";
-import { Avatar, Stack, Typography, Button, useMediaQuery } from "@mui/material";
+import {
+  Avatar,
+  Stack,
+  Typography,
+  Button,
+  useMediaQuery,
+} from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { addPostModal } from "../../redux/slice";
 const Input = () => {
@@ -31,7 +37,7 @@ const Input = () => {
               src={myInfo ? myInfo.profilePic : ""}
               alt={myInfo ? myInfo.userName : ""}
             />
-            <Typography color={"GrayText"}>Start a thread...</Typography>
+            <Typography color={"GrayText"}>Start a Vibe Post...</Typography>
           </Stack>
           <Button
             size="medium"

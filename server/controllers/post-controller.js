@@ -194,3 +194,51 @@ exports.singlePost = async (req, res) => {
     res.status(400).json({ msg: "Error in singlePost !", err: err.message });
   }
 };
+
+exports.editPost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ msg: "Id is required !" });
+    }
+    const postExists = await Post.findById(id);
+    if (!postExists) {
+      return res.status(400).json({ msg: "Post not found !" });
+    }
+    if (postExists.admin.toString() !== req.user._id.toString()) {
+      return res.status(400).json({ msg: "You are not authorized to edit this post !" });
+    }
+
+    const form = formidable({});
+    form.parse(req, async (err, fields, files) => {
+      if (err) {
+        return res.status(400).json({ msg: "Error in form parse !" });
+      }
+
+      if (fields.text) {
+        postExists.text = fields.text;
+      }
+
+      if (files.media) {
+        if (postExists.public_id) {
+          await cloudinary.uploader.destroy(postExists.public_id);
+        }
+        const uploadedImage = await cloudinary.uploader.upload(
+          files.media.filepath,
+          { folder: "PostVibe/Posts" }
+        );
+        if (!uploadedImage) {
+          return res.status(400).json({ msg: "Error while uploading new Image !" });
+        }
+        postExists.media = uploadedImage.secure_url;
+        postExists.public_id = uploadedImage.public_id;
+      }
+
+      const updatedPost = await postExists.save();
+      res.status(200).json({ msg: "Post Updated !", updatedPost });
+    });
+  } catch (err) {
+    console.error("Error in editPost:", err);
+    res.status(400).json({ msg: "Error in editPost !", err: err.message });
+  }
+};

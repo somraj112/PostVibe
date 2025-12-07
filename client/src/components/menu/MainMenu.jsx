@@ -1,7 +1,7 @@
 import { Menu, MenuItem } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { toggleColorMode, toggleMainMenu } from "../../redux/slice";
+import { toggleColorMode, toggleMainMenu, logout } from "../../redux/slice";
 import { useLogoutMeMutation } from "../../redux/service";
 import { useEffect } from "react";
 import { Bounce, toast } from "react-toastify";

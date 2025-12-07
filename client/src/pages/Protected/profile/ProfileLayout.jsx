@@ -23,7 +23,7 @@ const ProfileLayout = () => {
   const dispatch = useDispatch();
   const params = useParams();
 
-  const { data } = useUserDetailsQuery(params?.id);
+  const { data } = useUserDetailsQuery(params?.id, { skip: !params?.id });
   const [followUser, followUserData] = useFollowUserMutation();
 
   const { darkMode, myInfo } = useSelector((state) => state.service);
@@ -101,9 +101,9 @@ const ProfileLayout = () => {
         <title>
           {data
             ? data.user
-              ? data.user.userName + " | Threads Clone"
-              : "Threads Clone | App by Aditya Jawanjal"
-            : "Threads Clone | App by Aditya Jawanjal"}
+              ? data.user.userName + " | PostVibe"
+              : "PostVibe | App by Somraj Nandi"
+            : "PostVibe | App by Somraj Nandi"}
         </title>
       </Helmet>
       <Stack
@@ -132,7 +132,7 @@ const ProfileLayout = () => {
                 {data ? (data.user ? data.user.email : "") : ""}
               </Typography>
               <Chip
-                label="threads.net"
+                label="postvibe.net"
                 size="small"
                 sx={{ fontSize: _300 ? "0.8rem" : "0.6rem" }}
               />
@@ -195,7 +195,7 @@ const ProfileLayout = () => {
           to={`/profile/threads/${data?.user._id}`}
           className={`link ${darkMode ? "mode" : ""}`}
         >
-          Threads
+          Vibe 
         </Link>
         <Link
           to={`/profile/replies/${data?.user._id}`}
