@@ -29,7 +29,15 @@ const Post = ({ e }) => {
   const time =
     dayjs().diff(e?.createdAt, "day") > 7
       ? dayjs(e?.createdAt).format("DD MMM YYYY")
-      : dayjs(e?.createdAt).fromNow();
+      : dayjs(e?.createdAt)
+          .fromNow()
+          .replace("minutes", "m")
+          .replace("minute", "m")
+          .replace("hours", "h")
+          .replace("hour", "h")
+          .replace("days", "d")
+          .replace("day", "d")
+          .replace("ago", "");
 
   const checkIsAdmin = () => {
     if (e?.admin?._id === myInfo._id) {
