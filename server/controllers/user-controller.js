@@ -42,7 +42,6 @@ exports.signin = async (req, res) => {
       httpOnly: true,
       sameSite: "none",
       secure: true,
-      partitioned: true,
     });
     res
       .status(201)
@@ -80,7 +79,6 @@ exports.login = async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "none",
-      partitioned: true,
     });
     res.status(200).json({ msg: "User logged in succcessfully !" });
   } catch (err) {
@@ -218,7 +216,6 @@ exports.logout = async (req, res) => {
       httpOnly: true,
       sameSite: "none",
       secure: true,
-      partitioned: true,
     });
 
     res.status(201).json({ msg: "You logged out !" });
