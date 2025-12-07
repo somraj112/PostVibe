@@ -3,10 +3,12 @@ import Post from "../../components/home/Post";
 import Comments from "../../components/home/post/Comments";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 import { useAddCommentMutation, useSinglePostQuery } from "../../redux/service";
 import { Bounce, toast } from "react-toastify";
 
 const SinglePost = () => {
+  const { darkMode } = useSelector((state) => state.service);
   const params = useParams();
 
   const [comment, setComment] = useState("");
@@ -71,7 +73,24 @@ const SinglePost = () => {
           autoFocus
           placeholder="Comment here..."
           id="comment"
-          sx={{ width: "50%", mx: "auto", my: 5, p: 1 }}
+          sx={{
+            width: "50%",
+            mx: "auto",
+            my: 5,
+            p: 1,
+            input: {
+              color: darkMode ? "whitesmoke" : "black",
+              "&::placeholder": {
+                color: darkMode ? "whitesmoke" : "gray",
+                opacity: 1,
+              },
+            },
+            "& .MuiOutlinedInput-root": {
+              "& fieldset": {
+                borderColor: "gray",
+              },
+            },
+          }}
           onChange={(e) => setComment(e.target.value)}
           onKeyUp={handleAddComment}
           value={comment ? comment : ""}

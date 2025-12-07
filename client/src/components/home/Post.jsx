@@ -5,6 +5,10 @@ import PostTwo from "./post/PostTwo";
 import { useDispatch, useSelector } from "react-redux";
 import { addPostId, toggleMyMenu } from "../../redux/slice";
 import { useEffect, useState } from "react";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
+
+dayjs.extend(relativeTime);
 
 const Post = ({ e }) => {
   const { darkMode, myInfo } = useSelector((state) => state.service);
@@ -21,6 +25,11 @@ const Post = ({ e }) => {
     dispatch(addPostId(e._id));
     dispatch(toggleMyMenu(event.currentTarget));
   };
+
+  const time =
+    dayjs().diff(e?.createdAt, "day") > 7
+      ? dayjs(e?.createdAt).format("DD MMM YYYY")
+      : dayjs(e?.createdAt).fromNow();
 
   const checkIsAdmin = () => {
     if (e?.admin?._id === myInfo._id) {
@@ -70,7 +79,7 @@ const Post = ({ e }) => {
             position={"relative"}
             top={2}
           >
-            24h
+            {time}
           </Typography>
           {isAdmin ? (
             <IoIosMore size={_700 ? 28 : 20} onClick={handleOpenMenu} />
