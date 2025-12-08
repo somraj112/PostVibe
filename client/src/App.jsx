@@ -15,13 +15,13 @@ import { useMyInfoQuery } from "./redux/service";
 
 const App = () => {
   const { darkMode, myInfo } = useSelector((state) => state.service);
-  const { isLoading, isError } = useMyInfoQuery();
+  const { isLoading } = useMyInfoQuery();
 
   if (isLoading) {
-    return <></>;
+    return <div>Loading...</div>;
   }
 
-  if (isError || !myInfo) {
+  if (!myInfo) {
     return (
       <BrowserRouter
         future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
