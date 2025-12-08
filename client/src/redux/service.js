@@ -29,7 +29,15 @@ export const serviceApi = createApi({
         method: "POST",
         body: data,
       }),
-      invalidateTags: ["Me"],
+      invalidatesTags: ["Me"],
+      async onQueryStarted(arg, { queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          localStorage.setItem("token", data.token);
+        } catch (error) {
+          console.log(error);
+        }
+      },
     }),
     login: builder.mutation({
       query: (data) => ({
@@ -38,6 +46,14 @@ export const serviceApi = createApi({
         body: data,
       }),
       invalidatesTags: ["Me"],
+      async onQueryStarted(arg, { queryFulfilled }) {
+        try {
+          const { data } = await queryFulfilled;
+          localStorage.setItem("token", data.token);
+        } catch (error) {
+          console.log(error);
+        }
+      },
     }),
     myInfo: builder.query({
       query: () => ({
