@@ -45,7 +45,7 @@ exports.signin = async (req, res) => {
     });
     res
       .status(201)
-      .json({ msg: `User Signed in successfully ! hello ${result?.userName}` });
+      .json({ msg: `User Signed in successfully ! hello ${result?.userName}`, token: accesToken });
   } catch (err) {
     res.status(400).json({ msg: "Error in signin !", err: err.message });
   }
@@ -80,7 +80,7 @@ exports.login = async (req, res) => {
       secure: true,
       sameSite: "none",
     });
-    res.status(200).json({ msg: "User logged in succcessfully !" });
+    res.status(200).json({ msg: "User logged in succcessfully !", token: accessToken });
   } catch (err) {
     res.status(400).json({ msg: "Error in login !", err: err.message });
   }

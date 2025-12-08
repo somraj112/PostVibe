@@ -43,6 +43,7 @@ const Register = () => {
 
   useEffect(() => {
     if (signinUserData.isSuccess) {
+      localStorage.setItem("token", signinUserData.data.token);
       toast.success(signinUserData.data.msg, {
         position: "top-center",
         autoClose: 2500,
@@ -70,6 +71,7 @@ const Register = () => {
 
   useEffect(() => {
     if (loginUserData.isSuccess) {
+      localStorage.setItem("token", loginUserData.data.token);
       toast.success(loginUserData.data.msg, {
         position: "top-center",
         autoClose: 2500,

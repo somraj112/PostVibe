@@ -11,6 +11,13 @@ export const serviceApi = createApi({
   reducerPath: "serviceApi",
   baseQuery: fetchBaseQuery({
     baseUrl: `${SERVER_URL}/api/`,
+    prepareHeaders: (headers) => {
+      const token = localStorage.getItem("token");
+      if (token) {
+        headers.set("authorization", `Bearer ${token}`);
+      }
+      return headers;
+    },
     credentials: "include",
   }),
   keepUnusedDataFor: 60 * 60 * 24 * 7,

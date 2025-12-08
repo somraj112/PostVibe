@@ -28,6 +28,7 @@ const MainMenu = () => {
 
   useEffect(() => {
     if (logoutMeData.isSuccess) {
+      localStorage.removeItem("token");
       toast.warning(logoutMeData.data.msg, {
         position: "top-center",
         autoClose: 2500,
