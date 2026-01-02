@@ -18,44 +18,35 @@ const App = () => {
   const { darkMode, myInfo } = useSelector((state) => state.service);
   const { isLoading } = useMyInfoQuery();
 
-  if (isLoading) {
-    return <Loading />;
-  }
-
-  if (!myInfo) {
-    return (
+  return (
+    <Box minHeight="100vh" className={darkMode ? "mode" : ""}>
       <BrowserRouter
         future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
       >
-        <Routes>
-          <Route exact path="/*" element={<Register />} />
-        </Routes>
-      </BrowserRouter>
-    );
-  }
+        {isLoading && <Loading />}
 
-  return (
-    <>
-      <Box minHeight={"100vh"} className={darkMode ? "mode" : ""}>
-        <BrowserRouter
-          future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-        >
-          <Routes>
-            <Route exact path="/" element={<ProtectedLayout />}>
-              <Route exact path="" element={<Home />} />
-              <Route exact path="post/:id" element={<SinglePost />} />
-              <Route exact path="search" element={<Search />} />
-              <Route exact path="profile" element={<ProfileLayout />}>
-                <Route exact path="threads/:id" element={<Threads />} />
-                <Route exact path="replies/:id" element={<Replies />} />
-                <Route exact path="reposts/:id" element={<Repost />} />
+        <Routes>
+          {!myInfo && !isLoading && (
+            <Route path="/*" element={<Register />} />
+          )}
+
+          {myInfo && (
+            <Route path="/" element={<ProtectedLayout />}>
+              <Route index element={<Home />} />
+              <Route path="post/:id" element={<SinglePost />} />
+              <Route path="search" element={<Search />} />
+              <Route path="profile" element={<ProfileLayout />}>
+                <Route path="threads/:id" element={<Threads />} />
+                <Route path="replies/:id" element={<Replies />} />
+                <Route path="reposts/:id" element={<Repost />} />
               </Route>
             </Route>
-            <Route exact path="*" element={<Error />} />
-          </Routes>
-        </BrowserRouter>
-      </Box>
-    </>
+          )}
+
+          <Route path="*" element={<Error />} />
+        </Routes>
+      </BrowserRouter>
+    </Box>
   );
 };
 
