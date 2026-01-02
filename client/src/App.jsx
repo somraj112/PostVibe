@@ -12,13 +12,14 @@ import Search from "./pages/Protected/Search";
 import Register from "./pages/Register";
 import SinglePost from "./pages/Protected/SinglePost";
 import { useMyInfoQuery } from "./redux/service";
+import Loading from "./components/common/Loading";
 
 const App = () => {
   const { darkMode, myInfo } = useSelector((state) => state.service);
   const { isLoading } = useMyInfoQuery();
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   if (!myInfo) {
