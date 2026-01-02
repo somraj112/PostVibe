@@ -17,14 +17,14 @@ import Loading from "./components/common/Loading";
 const App = () => {
   const { darkMode, myInfo } = useSelector((state) => state.service);
   const { isLoading } = useMyInfoQuery();
-
+  if (isLoading) {
+    return <Loading />;
+  }
   return (
     <Box minHeight="100vh" className={darkMode ? "mode" : ""}>
       <BrowserRouter
         future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
       >
-        {isLoading && <Loading />}
-
         <Routes>
           {!myInfo && !isLoading && (
             <Route path="/*" element={<Register />} />

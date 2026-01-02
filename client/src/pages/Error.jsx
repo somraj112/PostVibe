@@ -14,6 +14,7 @@ const Error = () => {
           background: 'url("/error-bg.png")',
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
       >
         <Stack
@@ -40,7 +41,7 @@ const Error = () => {
                 cursor: "pointer",
               },
             }}
-            onClick={() => navigate(-1)}
+            onClick={() => navigate("/")}
           >
             Go Back
           </Button>
