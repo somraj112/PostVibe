@@ -30,6 +30,15 @@ const router = express.Router();
 router.post("/signin", signin);
 router.post("/login", login);
 
+router.get("/health", async (req, res) => {
+  res.set("Cache-Control", "no-store");
+
+  res.status(200).json({
+    status: "ok",
+    timestamp: new Date().toISOString(),
+  });
+});
+
 router.get("/user/:id", auth, userDetails);
 router.put("/user/follow/:id", auth, followUser);
 router.put("/update", auth, updateProfile);
