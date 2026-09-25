@@ -13,11 +13,35 @@ import Register from "./pages/Register";
 import SinglePost from "./pages/Protected/SinglePost";
 import { useMyInfoQuery } from "./redux/service";
 import Loading from "./components/common/Loading";
+import { useEffect, useState } from "react";
 
 const App = () => {
   const { darkMode, myInfo } = useSelector((state) => state.service);
-  const { isLoading } = useMyInfoQuery();
-  if (isLoading) {
+
+  const [hasSession, setHasSession] = useState(
+    localStorage.getItem("hasSession") === "true",
+  );
+
+  useEffect(() => {
+    const updateSession = () => {
+      setHasSession(localStorage.getItem("hasSession") === "true");
+    };
+
+    window.addEventListener("session-change", updateSession);
+
+    return () => {
+      window.removeEventListener("session-change", updateSession);
+    };
+  }, []);
+
+  const { isLoading } = useMyInfoQuery(undefined, {
+    skip: !hasSession,
+    refetchOnFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMountOrArgChange: true,
+  });
+
+  if (hasSession && isLoading) {
     return <Loading />;
   }
   return (
@@ -26,9 +50,7 @@ const App = () => {
         future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
       >
         <Routes>
-          {!myInfo && !isLoading && (
-            <Route path="/*" element={<Register />} />
-          )}
+          {!myInfo && !isLoading && <Route path="/*" element={<Register />} />}
 
           {myInfo && (
             <Route path="/" element={<ProtectedLayout />}>

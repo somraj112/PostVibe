@@ -1,6 +1,7 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import {
   addMyInfo,
+  clearMyInfo,
   addSingle,
   addToAllPost,
   addUser,
@@ -23,6 +24,15 @@ export const serviceApi = createApi({
         body: data,
       }),
       invalidatesTags: ["Me"],
+      async onQueryStarted(arg, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          localStorage.setItem("hasSession", "true");
+          window.dispatchEvent(new Event("session-change"));
+        } catch (err) {
+          console.log(err);
+        }
+      },
     }),
     login: builder.mutation({
       query: (data) => ({
@@ -31,6 +41,15 @@ export const serviceApi = createApi({
         body: data,
       }),
       invalidatesTags: ["Me"],
+      async onQueryStarted(arg, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          localStorage.setItem("hasSession", "true");
+          window.dispatchEvent(new Event("session-change"));
+        } catch (err) {
+          console.log(err);
+        }
+      },
     }),
     myInfo: builder.query({
       query: () => ({
@@ -53,10 +72,12 @@ export const serviceApi = createApi({
         method: "POST",
       }),
       invalidatesTags: ["Me"],
-      async onQueryStarted(arg, { queryFulfilled }) {
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         try {
           await queryFulfilled;
-          localStorage.removeItem("token");
+          localStorage.removeItem("hasSession");
+          dispatch(clearMyInfo());
+          window.dispatchEvent(new Event("session-change"));
         } catch (err) {
           console.log(err);
         }

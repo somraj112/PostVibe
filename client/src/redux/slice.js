@@ -44,6 +44,9 @@ export const serviceSlice = createSlice({
     addMyInfo: (state, action) => {
       state.myInfo = action.payload.me;
     },
+    clearMyInfo: (state) => {
+      state.myInfo = null;
+    },
     addUser: (state, action) => {
       state.user = action.payload;
     },
@@ -85,7 +88,7 @@ export const serviceSlice = createSlice({
       let newArr = postArr.filter((e) => e._id !== state.postId);
       state.allPosts = newArr;
     },
-    addPostId:(state,action)=>{
+    addPostId: (state, action) => {
       state.postId = action.payload;
     },
     addCommentId: (state, action) => {
@@ -117,6 +120,7 @@ export const {
   toggleMyMenu,
   toggleColorMode,
   addMyInfo,
+  clearMyInfo,
   addUser,
   addSingle,
   addToAllPost,
