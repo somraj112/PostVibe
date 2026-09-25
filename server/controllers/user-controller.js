@@ -45,7 +45,7 @@ exports.signin = async (req, res) => {
     });
     res
       .status(201)
-      .json({ msg: `User Signed in successfully ! hello ${result?.userName}`, token: accesToken });
+      .json({ msg: `User Signed in successfully ! Hello ${result?.userName}`});
   } catch (err) {
     res.status(400).json({ msg: "Error in signin !", err: err.message });
   }
@@ -61,7 +61,6 @@ exports.login = async (req, res) => {
     if (!userExists) {
       return res.status(400).json({ msg: "Please Signin first !" });
     }
-    console.log(userExists);
     const passwordMatched = await bcrypt.compare(password, userExists.password);
     if (!passwordMatched) {
       return res.status(400).json({ msg: "Incorrect credentials !" });
@@ -80,7 +79,7 @@ exports.login = async (req, res) => {
       secure: true,
       sameSite: "none",
     });
-    res.status(200).json({ msg: "User logged in succcessfully !", token: accessToken });
+    res.status(200).json({ msg: "User logged in succcessfully !" });
   } catch (err) {
     res.status(400).json({ msg: "Error in login !", err: err.message });
   }
@@ -146,50 +145,72 @@ exports.followUser = async (req, res) => {
 exports.updateProfile = async (req, res) => {
   try {
     const userExists = await User.findById(req.user._id);
+
     if (!userExists) {
-      return res.status(400).json({ msg: "No such user !" });
+      return res.status(404).json({ msg: "No such user!" });
     }
+
     const form = formidable({});
+
     form.parse(req, async (err, fields, files) => {
-      if (err) {
-        return res.status(400).json({ msg: "Error in formidable !", err: err });
-      }
-      if (fields.text) {
-        await User.findByIdAndUpdate(
-          req.user._id,
-          { bio: fields.text },
-          { new: true }
-        );
-      }
-      if (files.media) {
-        if (userExists.public_id) {
-          await cloudinary.uploader.destroy(
-            userExists.public_id,
-            (error, result) => {
-              console.log({ error, result });
-            }
+      try {
+        if (err) {
+          return res.status(400).json({
+            msg: "Error in formidable!",
+            err: err.message,
+          });
+        }
+
+        // Update bio
+        if (fields.text) {
+          await User.findByIdAndUpdate(
+            req.user._id,
+            { bio: fields.text },
+            { new: true }
           );
         }
-        const uploadedImage = await cloudinary.uploader.upload(
-          files.media.filepath,
-          { folder: "PostVibe/Profiles" }
-        );
-        if (!uploadedImage) {
-          return res.status(400).json({ msg: "Error while uploading pic !" });
+
+        // Update profile picture
+        if (files.media) {
+          // Delete old image
+          if (userExists.public_id) {
+            await cloudinary.uploader.destroy(userExists.public_id);
+          }
+
+          // Upload new image
+          const uploadedImage = await cloudinary.uploader.upload(
+            files.media.filepath,
+            {
+              folder: "PostVibe/Profiles",
+            }
+          );
+
+          await User.findByIdAndUpdate(
+            req.user._id,
+            {
+              profilePic: uploadedImage.secure_url,
+              public_id: uploadedImage.public_id,
+            },
+            { new: true }
+          );
         }
-        await User.findByIdAndUpdate(
-          req.user._id,
-          {
-            profilePic: uploadedImage.secure_url,
-            public_id: uploadedImage.public_id,
-          },
-          { new: true }
-        );
+
+        // Send response only after everything succeeds
+        return res.status(200).json({
+          msg: "Profile updated successfully!",
+        });
+      } catch (err) {
+        return res.status(400).json({
+          msg: "Error updating profile!",
+          err: err.message,
+        });
       }
     });
-    res.status(201).json({ msg: "Profile updated successfully !" });
   } catch (err) {
-    res.status(400).json({ msg: "Error in updateProfile !", err: err.message });
+    return res.status(500).json({
+      msg: "Error in updateProfile!",
+      err: err.message,
+    });
   }
 };
 

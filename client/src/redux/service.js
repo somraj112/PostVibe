@@ -11,13 +11,6 @@ export const serviceApi = createApi({
   reducerPath: "serviceApi",
   baseQuery: fetchBaseQuery({
     baseUrl: `${SERVER_URL}/api/`,
-    prepareHeaders: (headers) => {
-      const token = localStorage.getItem("token");
-      if (token) {
-        headers.set("authorization", `Bearer ${token}`);
-      }
-      return headers;
-    },
     credentials: "include",
   }),
   keepUnusedDataFor: 60 * 60 * 24 * 7,
@@ -30,14 +23,6 @@ export const serviceApi = createApi({
         body: data,
       }),
       invalidatesTags: ["Me"],
-      async onQueryStarted(arg, { queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          localStorage.setItem("token", data.token);
-        } catch (error) {
-          console.log(error);
-        }
-      },
     }),
     login: builder.mutation({
       query: (data) => ({
@@ -46,14 +31,6 @@ export const serviceApi = createApi({
         body: data,
       }),
       invalidatesTags: ["Me"],
-      async onQueryStarted(arg, { queryFulfilled }) {
-        try {
-          const { data } = await queryFulfilled;
-          localStorage.setItem("token", data.token);
-        } catch (error) {
-          console.log(error);
-        }
-      },
     }),
     myInfo: builder.query({
       query: () => ({
@@ -76,6 +53,14 @@ export const serviceApi = createApi({
         method: "POST",
       }),
       invalidatesTags: ["Me"],
+      async onQueryStarted(arg, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          localStorage.removeItem("token");
+        } catch (err) {
+          console.log(err);
+        }
+      },
     }),
     userDetails: builder.query({
       query: (id) => ({

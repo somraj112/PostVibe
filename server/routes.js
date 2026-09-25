@@ -43,7 +43,7 @@ router.get("/user/:id", auth, userDetails);
 router.put("/user/follow/:id", auth, followUser);
 router.put("/update", auth, updateProfile);
 router.get("/users/search/:query", auth, searchUser);
-router.post("/logout", auth, logout);
+router.post("/logout", logout);
 router.get("/me", auth, myInfo);
 
 router.post("/post", auth, addPost);
