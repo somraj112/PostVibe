@@ -43,7 +43,6 @@ const Register = () => {
 
   useEffect(() => {
     if (signinUserData.isSuccess) {
-
       toast.success(signinUserData.data.msg, {
         position: "top-center",
         autoClose: 2500,
@@ -71,7 +70,6 @@ const Register = () => {
 
   useEffect(() => {
     if (loginUserData.isSuccess) {
-
       toast.success(loginUserData.data.msg, {
         position: "top-center",
         autoClose: 2500,
@@ -117,7 +115,8 @@ const Register = () => {
             ? {
                 backgroundImage: 'url("/register-bg.webp")',
                 backgroundRepeat: "no-repeat",
-                backgroundSize: "100% 600px",
+                backgroundSize: "contain",
+                backgroundPosition: "center center"
               }
             : null
         }
