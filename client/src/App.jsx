@@ -34,16 +34,16 @@ const App = () => {
     };
   }, []);
 
-  const { isLoading } = useMyInfoQuery(undefined, {
-    skip: !hasSession,
-    refetchOnFocus: false,
-    refetchOnReconnect: false,
-    refetchOnMountOrArgChange: true,
-  });
+  const { isLoading, isFetching } = useMyInfoQuery(undefined, {
+  skip: !hasSession,
+  refetchOnFocus: false,
+  refetchOnReconnect: false,
+  refetchOnMountOrArgChange: true,
+});
 
-  if (hasSession && isLoading) {
-    return <Loading />;
-  }
+  if (hasSession && (isLoading || isFetching)) {
+  return <Loading />;
+}
   return (
     <Box minHeight="100vh" className={darkMode ? "mode" : ""}>
       <BrowserRouter
