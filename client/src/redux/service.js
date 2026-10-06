@@ -51,6 +51,26 @@ export const serviceApi = createApi({
         }
       },
     }),
+    googleLogin: builder.mutation({
+      query: (data) => ({
+        url: "google",
+        method: "POST",
+        body: data,
+      }),
+      invalidatesTags: ["Me"],
+
+      async onQueryStarted(arg, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+
+          localStorage.setItem("hasSession", "true");
+
+          window.dispatchEvent(new Event("session-change"));
+        } catch (err) {
+          console.log(err);
+        }
+      },
+    }),
     myInfo: builder.query({
       query: () => ({
         url: "me",
@@ -233,6 +253,7 @@ export const serviceApi = createApi({
 export const {
   useSigninMutation,
   useLoginMutation,
+  useGoogleLoginMutation,
   useMyInfoQuery,
   useLogoutMeMutation,
   useUserDetailsQuery,

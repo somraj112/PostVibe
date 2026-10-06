@@ -62,6 +62,50 @@
   }
 }
 
+.google-login-container {
+  width: 100%;
+  margin-top: 4px;
+}
+
+/* OR divider */
+
+.google-divider {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  margin: 4px 0 18px;
+  gap: 12px;
+}
+
+.google-divider::before,
+.google-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.25);
+}
+
+.google-divider span {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+}
+
+.google-button {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.google-button > div {
+  width: 100% !important;
+  display: flex;
+  justify-content: center;
+}
+
 .login-card {
   position: relative;
   z-index: 5;

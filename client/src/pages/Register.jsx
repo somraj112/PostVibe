@@ -2,9 +2,13 @@ import "./Register.css";
 
 import { useEffect, useState } from "react";
 import { Bounce, toast } from "react-toastify";
-
+import { GoogleLogin } from "@react-oauth/google";
 import Loading from "../components/common/Loading";
-import { useLoginMutation, useSigninMutation } from "../redux/service";
+import {
+  useLoginMutation,
+  useSigninMutation,
+  useGoogleLoginMutation,
+} from "../redux/service";
 
 const Register = () => {
   const [login, setLogin] = useState(false);
@@ -15,7 +19,7 @@ const Register = () => {
 
   const [signinUser, signinData] = useSigninMutation();
   const [loginUser, loginData] = useLoginMutation();
-
+  const [googleLogin, googleLoginData] = useGoogleLoginMutation();
   const toggleLogin = () => setLogin((prev) => !prev);
 
   const handleRegister = async () => {
@@ -26,6 +30,15 @@ const Register = () => {
     await loginUser({ email, password });
   };
 
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      await googleLogin({
+        credential: credentialResponse.credential,
+      }).unwrap();
+    } catch (error) {
+      console.error("Google Login Error:", error);
+    }
+  };
   useEffect(() => {
     if (signinData.isSuccess) {
       toast.success(signinData.data.msg, {
@@ -66,7 +79,11 @@ const Register = () => {
     }
   }, [loginData.isSuccess, loginData.isError]);
 
-  if (signinData.isLoading || loginData.isLoading) {
+  if (
+    signinData.isLoading ||
+    loginData.isLoading ||
+    googleLoginData.isLoading
+  ) {
     return <Loading />;
   }
 
@@ -162,8 +179,31 @@ const Register = () => {
           </button>
         </div>
 
+        <div className="google-login-container">
+          <div className="google-divider">
+            <span>OR</span>
+          </div>
+
+          <div className="google-button">
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => {
+                console.log("Google Login Failed");
+              }}
+              text="continue_with"
+              shape="pill"
+              theme="outline"
+              size="large"
+              logo_alignment="center"
+              width="350"
+            />
+          </div>
+        </div>
+
         <div className="group">
-          <span>{login ? "Don't have an account?" : "Already have an account?"}</span>
+          <span>
+            {login ? "Don't have an account?" : "Already have an account?"}
+          </span>
 
           <button className="toggle-btn" onClick={toggleLogin}>
             {login ? "Sign Up" : "Login"}

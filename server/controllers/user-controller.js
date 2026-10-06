@@ -3,6 +3,8 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const formidable = require("formidable");
 const cloudinary = require("../config/cloudinary");
+const { OAuth2Client } = require("google-auth-library");
+const googleClient = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 exports.signin = async (req, res) => {
   try {
@@ -45,7 +47,7 @@ exports.signin = async (req, res) => {
     });
     res
       .status(201)
-      .json({ msg: `User Signed in successfully ! Hello ${result?.userName}`});
+      .json({ msg: `User Signed in successfully ! Hello ${result?.userName}` });
   } catch (err) {
     res.status(400).json({ msg: "Error in signin !", err: err.message });
   }
@@ -61,6 +63,11 @@ exports.login = async (req, res) => {
     if (!userExists) {
       return res.status(400).json({ msg: "Please Signin first !" });
     }
+    if (!userExists.password) {
+      return res.status(400).json({
+        msg: "This account uses Google Login. Please continue with Google.",
+      });
+    }
     const passwordMatched = await bcrypt.compare(password, userExists.password);
     if (!passwordMatched) {
       return res.status(400).json({ msg: "Incorrect credentials !" });
@@ -68,7 +75,7 @@ exports.login = async (req, res) => {
     const accessToken = jwt.sign(
       { token: userExists._id },
       process.env.JWT_SECRET,
-      { expiresIn: "30d" }
+      { expiresIn: "30d" },
     );
     if (!accessToken) {
       return res.status(400).json({ msg: "Token not gemnerated in login !" });
@@ -82,6 +89,91 @@ exports.login = async (req, res) => {
     res.status(200).json({ msg: "User logged in succcessfully !" });
   } catch (err) {
     res.status(400).json({ msg: "Error in login !", err: err.message });
+  }
+};
+
+exports.googleLogin = async (req, res) => {
+  try {
+    const { credential } = req.body;
+
+    if (!credential) {
+      return res.status(400).json({
+        msg: "Google credential is required!",
+      });
+    }
+
+    const ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID,
+    });
+
+    const payload = ticket.getPayload();
+
+    if (!payload) {
+      return res.status(401).json({
+        msg: "Invalid Google credential!",
+      });
+    }
+
+    const { sub: googleId, email, name, picture, email_verified } = payload;
+
+    if (!email || !email_verified) {
+      return res.status(400).json({
+        msg: "Google email could not be verified!",
+      });
+    }
+
+    let user = await User.findOne({
+      $or: [{ googleId }, { email }],
+    });
+
+    // Existing user
+    if (user) {
+      // Existing local account with same verified Google email
+      if (!user.googleId) {
+        user.googleId = googleId;
+        user.authProvider = "google";
+
+        if (picture && user.authProvider === "google") {
+          user.profilePic = picture;
+        }
+
+        await user.save();
+      }
+    } else {
+      // Create new Google user
+      user = await User.create({
+        userName: name || email.split("@")[0],
+        email,
+        googleId,
+        authProvider: "google",
+        profilePic:
+          picture ||
+          "https://www.pngall.com/wp-content/uploads/5/User-Profile-PNG-Clipart.png",
+      });
+    }
+
+    const accessToken = jwt.sign({ token: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "30d",
+    });
+
+    res.cookie("token", accessToken, {
+      maxAge: 1000 * 60 * 60 * 24 * 30,
+      httpOnly: true,
+      secure: true,
+      sameSite: "none",
+    });
+
+    return res.status(200).json({
+      msg: `Welcome ${user.userName}!`,
+    });
+  } catch (err) {
+    console.error("Google Login Error:", err);
+
+    return res.status(401).json({
+      msg: "Google authentication failed!",
+      err: err.message,
+    });
   }
 };
 
@@ -125,7 +217,7 @@ exports.followUser = async (req, res) => {
         {
           $pull: { followers: req.user._id },
         },
-        { new: true }
+        { new: true },
       );
       return res.status(201).json({ msg: `Unfollowed ${userExists.userName}` });
     }
@@ -134,7 +226,7 @@ exports.followUser = async (req, res) => {
       {
         $push: { followers: req.user._id },
       },
-      { new: true }
+      { new: true },
     );
     return res.status(201).json({ msg: `Following ${userExists.userName}` });
   } catch (err) {
@@ -166,7 +258,7 @@ exports.updateProfile = async (req, res) => {
           await User.findByIdAndUpdate(
             req.user._id,
             { bio: fields.text },
-            { new: true }
+            { new: true },
           );
         }
 
@@ -182,7 +274,7 @@ exports.updateProfile = async (req, res) => {
             files.media.filepath,
             {
               folder: "PostVibe/Profiles",
-            }
+            },
           );
 
           await User.findByIdAndUpdate(
@@ -191,7 +283,7 @@ exports.updateProfile = async (req, res) => {
               profilePic: uploadedImage.secure_url,
               public_id: uploadedImage.public_id,
             },
-            { new: true }
+            { new: true },
           );
         }
 

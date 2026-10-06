@@ -7,15 +7,20 @@ import store from "./redux/store.js";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { HelmetProvider } from "react-helmet-async";
+import { GoogleOAuthProvider } from "@react-oauth/google";
+
+const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID;
 
 const helmetContext = {};
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <Provider store={store}>
-      <HelmetProvider context={helmetContext} >
-        <App />
-      </HelmetProvider>
+      <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
+        <HelmetProvider context={helmetContext} >
+          <App />
+        </HelmetProvider>
+      </GoogleOAuthProvider>
       <ToastContainer />
     </Provider>
   </React.StrictMode>

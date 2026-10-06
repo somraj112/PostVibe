@@ -2,6 +2,7 @@ const express = require("express");
 const {
   signin,
   login,
+  googleLogin,
   userDetails,
   followUser,
   updateProfile,
@@ -29,6 +30,7 @@ const router = express.Router();
 
 router.post("/signin", signin);
 router.post("/login", login);
+router.post("/google", googleLogin);
 
 router.get("/health", async (req, res) => {
   res.set("Cache-Control", "no-store");
