@@ -9,23 +9,28 @@ import { useSelector } from "react-redux";
 const Home = () => {
   const [page, setPage] = useState(1);
   const [showMore, setShowMore] = useState(true);
+
   const { data, isLoading } = useAllPostQuery(page);
   const { allPosts } = useSelector((state) => state.service);
 
   const handleClick = () => {
-    setPage((pre) => pre + 1);
+    setPage((prev) => prev + 1);
   };
 
   useEffect(() => {
     if (data) {
-      if (data.posts.length < 3) {
+      if (data.posts.length < 10) {
         setShowMore(false);
+      } else {
+        setShowMore(true);
       }
     }
   }, [data]);
+
   return (
     <>
       <Input />
+
       <Stack flexDirection={"column"} gap={2} mb={10}>
         {allPosts ? (
           allPosts.length > 0 ? (
@@ -41,10 +46,16 @@ const Home = () => {
           <Loading />
         ) : null}
       </Stack>
+
       {showMore ? (
         <Button
           size="large"
-          sx={{ my: 5, p: 3, textDecoration: "underline", cursor: "pointer" }}
+          sx={{
+            my: 5,
+            p: 3,
+            textDecoration: "underline",
+            cursor: "pointer",
+          }}
           onClick={handleClick}
         >
           Load More
@@ -59,4 +70,5 @@ const Home = () => {
     </>
   );
 };
+
 export default Home;

@@ -52,8 +52,8 @@ exports.allPost = async (req, res) => {
     }
     const posts = await Post.find({})
       .sort({ createdAt: -1 })
-      .skip((pageNumber - 1) * 3)
-      .limit(3)
+      .skip((pageNumber - 1) * 10)
+      .limit(10)
       .populate({ path: "admin", select: "-password" })
       .populate({ path: "likes", select: "-password" })
       .populate({
