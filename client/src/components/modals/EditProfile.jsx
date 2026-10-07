@@ -23,7 +23,7 @@ import { Bounce, toast } from "react-toastify";
 
 const EditProfile = () => {
   const { openEditProfileModal, myInfo } = useSelector(
-    (state) => state.service
+    (state) => state.service,
   );
   const _700 = useMediaQuery("(min-width:700px)");
 
@@ -94,6 +94,14 @@ const EditProfile = () => {
         onClose={handleClose}
         fullWidth
         fullScreen={_700 ? false : true}
+        slotProps={{
+          paper: {
+            sx: {
+              border: "1px solid #bdbdbd",
+              borderRadius: "12px",
+            },
+          },
+        }}
       >
         {updateProfileData.isLoading ? (
           <Stack height={"60vh"}>
@@ -119,8 +127,8 @@ const EditProfile = () => {
                     pic
                       ? URL.createObjectURL(pic)
                       : myInfo
-                      ? myInfo.profilePic
-                      : ""
+                        ? myInfo.profilePic
+                        : ""
                   }
                   alt={myInfo ? myInfo.userName : ""}
                   sx={{ width: 96, height: 96, alignSelf: "center" }}

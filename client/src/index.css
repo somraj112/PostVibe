@@ -15,14 +15,19 @@
   cursor: pointer;
 }
 .text1 {
-  border: none;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border: 1px solid #bdbdbd;
+  border-radius: 8px;
   outline: none;
-  padding: 5px 10px;
-  position: relative;
-  left: -10px;
-  color: gray;
   font-size: 1rem;
-  margin-bottom: 20px;
+  background-color: white;
+  color: #333;
+}
+
+.text1:focus {
+  border: 2px solid #1976d2;
 }
 .file-input {
   display: none;
